@@ -16,9 +16,9 @@ defmodule ElixirKata do
     str |> my_reverse_4_recursive |> to_string()
   end
 
-  defp my_reverse_4_recursive(binary) when length(binary) == 0, do: []
+  defp my_reverse_4_recursive(""), do: ""
 
-  defp my_reverse_4_recursive(<<byte::size(1), data::binary>>) do
+  defp my_reverse_4_recursive(<<byte::size(8), data::binary>>) do
     my_reverse_4_recursive(data) <> <<byte>>
   end
 end
