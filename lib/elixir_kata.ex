@@ -12,13 +12,6 @@ defmodule ElixirKata do
   defp my_reverse_3_recursive([]), do: []
   defp my_reverse_3_recursive([head | tail]), do: my_reverse_3_recursive(tail) ++ [head]
 
-  def my_reverse_4(str) do
-    str |> my_reverse_4_recursive |> to_string()
-  end
-
-  defp my_reverse_4_recursive(""), do: ""
-
-  defp my_reverse_4_recursive(<<byte::size(8), data::binary>>) do
-    my_reverse_4_recursive(data) <> <<byte>>
-  end
+  def my_reverse_4(""), do: ""
+  def my_reverse_4(<<head::size(8), tail::binary>>), do: my_reverse_4(tail) <> <<head>>
 end
