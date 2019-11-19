@@ -1,18 +1,24 @@
 defmodule ElixirKata do
-  @moduledoc """
-  Documentation for ElixirKata.
-  """
+  def my_reverse_1(str) do
+    String.reverse(str)
+  end
 
-  @doc """
-  Hello world.
+  defdelegate my_reverse_2(str), to: String, as: :reverse
 
-  ## Examples
+  def my_reverse_3(str) do
+    str |> String.to_charlist() |> my_reverse_3_recursive |> to_string()
+  end
 
-      iex> ElixirKata.hello()
-      :world
+  defp my_reverse_3_recursive([]), do: []
+  defp my_reverse_3_recursive([head | tail]), do: my_reverse_3_recursive(tail) ++ [head]
 
-  """
-  def hello do
-    :world
+  def my_reverse_4(str) do
+    str |> my_reverse_4_recursive |> to_string()
+  end
+
+  defp my_reverse_4_recursive(binary) when length(binary) == 0, do: []
+
+  defp my_reverse_4_recursive(<<byte::size(1), data::binary>>) do
+    my_reverse_4_recursive(data) <> <<byte>>
   end
 end
