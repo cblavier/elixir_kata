@@ -1,10 +1,11 @@
 defmodule PoemGenerator do
   @doc ~S"""
-  iex> PoemGenerator.sliding_window([0, 1, 2, 3, 4, 5], 3)
+  iex> import PoemGenerator
+  iex> sliding_window([0, 1, 2, 3, 4, 5], 3)
   [[0, 1, 2], [1, 2, 3], [2, 3, 4], [3, 4, 5] ]
-  iex> PoemGenerator.sliding_window([0, 1, 2, 3, 4, 5], 1)
+  iex> sliding_window([0, 1, 2, 3, 4, 5], 1)
   [[0], [1], [2], [3], [4], [5]]
-  iex> PoemGenerator.sliding_window([0, 1, 2, 3, 4, 5], 2)
+  iex> sliding_window([0, 1, 2, 3, 4, 5], 2)
   [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5]]
   """
   def sliding_window(list, count) do
@@ -12,11 +13,12 @@ defmodule PoemGenerator do
   end
 
   @doc ~S"""
-  iex> PoemGenerator.sliding_window_2([0, 1, 2, 3, 4, 5], 3)
+  iex> import PoemGenerator
+  iex> sliding_window_2([0, 1, 2, 3, 4, 5], 3)
   [[0, 1, 2], [1, 2, 3], [2, 3, 4], [3, 4, 5] ]
-  iex> PoemGenerator.sliding_window_2([0, 1, 2, 3, 4, 5], 1)
+  iex> sliding_window_2([0, 1, 2, 3, 4, 5], 1)
   [[0], [1], [2], [3], [4], [5]]
-  iex> PoemGenerator.sliding_window_2([0, 1, 2, 3, 4, 5], 2)
+  iex> sliding_window_2([0, 1, 2, 3, 4, 5], 2)
   [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5]]
   """
   def sliding_window_2(list, count) do
