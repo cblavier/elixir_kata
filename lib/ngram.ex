@@ -43,23 +43,22 @@ defmodule NGram do
   end
 
   def with_count(chunks) do
-    {prefix_counts, chunk_counts} =
-      Enum.reduce(chunks, {%{}, %{}}, fn chunk, {prefix_counts, chunk_counts} ->
-        {
-          Map.update(prefix_counts, chunk_prefix(chunk), 1, &(&1 + 1)),
-          Map.update(chunk_counts, chunk, 1, &(&1 + 1))
-        }
+    counts =
+      Enum.reduce(chunks, %{}, fn chunk, counts ->
+        counts
+        |> Map.update(chunk_prefix(chunk), 1, &(&1 + 1))
+        |> Map.update(chunk, 1, &(&1 + 1))
       end)
 
-    {chunks, prefix_counts, chunk_counts}
+    {chunks, counts}
   end
 
-  def with_probability({chunks, prefix_counts, chunk_counts}) do
+  def with_probability({chunks, counts}) do
     for chunk <- chunks,
         into: %{},
         do: {
           chunk,
-          Map.get(chunk_counts, chunk) / Map.get(prefix_counts, chunk_prefix(chunk))
+          Map.get(counts, chunk) / Map.get(counts, chunk_prefix(chunk))
         }
   end
 
