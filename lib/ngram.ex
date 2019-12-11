@@ -45,10 +45,8 @@ defmodule NGram do
   def with_count(chunks) do
     {prefix_counts, chunk_counts} =
       Enum.reduce(chunks, {%{}, %{}}, fn chunk, {prefix_counts, chunk_counts} ->
-        chunk_prefix = Enum.slice(chunk, 0..-2)
-
         {
-          Map.update(prefix_counts, chunk_prefix, 1, &(&1 + 1)),
+          Map.update(prefix_counts, chunk_prefix(chunk), 1, &(&1 + 1)),
           Map.update(chunk_counts, chunk, 1, &(&1 + 1))
         }
       end)
@@ -57,11 +55,15 @@ defmodule NGram do
   end
 
   def with_probability({chunks, prefix_counts, chunk_counts}) do
-    Enum.reduce(chunks, %{}, fn chunk, acc ->
-      chunk_prefix = Enum.slice(chunk, 0..-2)
-      Map.put(acc, chunk, Map.get(chunk_counts, chunk) / Map.get(prefix_counts, chunk_prefix))
-    end)
+    for chunk <- chunks,
+        into: %{},
+        do: {
+          chunk,
+          Map.get(chunk_counts, chunk) / Map.get(prefix_counts, chunk_prefix(chunk))
+        }
   end
+
+  def chunk_prefix(chunk), do: Enum.slice(chunk, 0..-2)
 
   def build_from_file(data_path, n) do
     model =
