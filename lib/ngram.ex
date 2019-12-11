@@ -37,30 +37,29 @@ defmodule NGram do
   }
   """
   def build_from_string(string, n) do
-    # Really basic tokenization on white spaces (not perfect but do the job)
     tokens = String.split(string, " ")
-
-    model = tokens |> sliding_window(n) |> build_ngram_model()
-
+    model = tokens |> sliding_window(n) |> with_count() |> with_probability()
     %NGram{n: n, model: model}
   end
 
-  def build_ngram_model(chunks) do
-    {prefix_occurences, chunk_occurences} =
-      Enum.reduce(chunks, {%{}, %{}}, fn chunk, {prefix_acc, acc} ->
+  def with_count(chunks) do
+    {prefix_counts, chunk_counts} =
+      Enum.reduce(chunks, {%{}, %{}}, fn chunk, {prefix_counts, chunk_counts} ->
         chunk_prefix = Enum.slice(chunk, 0..-2)
 
         {
-          Map.update(prefix_acc, chunk_prefix, 1, &(&1 + 1)),
-          Map.update(acc, chunk, 1, &(&1 + 1))
+          Map.update(prefix_counts, chunk_prefix, 1, &(&1 + 1)),
+          Map.update(chunk_counts, chunk, 1, &(&1 + 1))
         }
       end)
 
+    {chunks, prefix_counts, chunk_counts}
+  end
+
+  def with_probability({chunks, prefix_counts, chunk_counts}) do
     Enum.reduce(chunks, %{}, fn chunk, acc ->
       chunk_prefix = Enum.slice(chunk, 0..-2)
-      prefix_occurence = Map.get(prefix_occurences, chunk_prefix)
-      chunk_occurence = Map.get(chunk_occurences, chunk)
-      Map.put(acc, chunk, chunk_occurence / prefix_occurence)
+      Map.put(acc, chunk, Map.get(chunk_counts, chunk) / Map.get(prefix_counts, chunk_prefix))
     end)
   end
 
